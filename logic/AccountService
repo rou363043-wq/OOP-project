@@ -1,1 +1,14 @@
+public class AccountService{
+private Administrator admin = new Administrator();
+private ArrayList<Student> students = new ArrayList<Student>();
+private ArrayList<AccessRequest> requesrs = new ArrayList<AcessRequest>();
+private ArrayList<TimeGrant> grants - new ArrayList<TimeGrant>();
+private String message = "";
 
+public String getMessage(){ 
+return message;}
+
+
+
+
+}
