@@ -1,3 +1,8 @@
+package logic;
+
+
+
+
 public class AccountService{
   private Administrator admin = new Administrator();
   private ArrayList<Student> students = new ArrayList<Student>();
