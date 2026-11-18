@@ -36,13 +36,26 @@ public AccessRequest( String unversityID, String fullname, String email, String 
         return true;
   }
   public boolean reject() {
-    if (status.equals("Pending"))
+    if (status.equals("Pending")){
       status= "Rejected";
     return true;
-    return false;}
+    }
+    return false;
+}
 @override
   public String toString(){
     return universityId + ";"+ fullName + ";" + email + ";" + phone + ";" + password + ";" status;
+}
+  public static AccessRequest fromString(String line){
+    String[] p = line.split(";");
+    if (p.length() !=6)
+      return null;
+   if (!p[5].equals("Pending") && !p[5].equals("Approved") && !p[5].equals("rejected))
+     return null;
+  AccessRequest r = new AcessRequest( p[0], p[1], p[2], p[3], p[4]);
+   r.status = p[5];
+    return r;
+}
 }
 
 
