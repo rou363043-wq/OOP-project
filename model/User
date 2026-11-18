@@ -22,4 +22,5 @@ public boolean checkPassword(String typed){
  else
      return false;
 }
-public a
+public abstract String getRole();
+}
