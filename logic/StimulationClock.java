@@ -1,4 +1,4 @@
-
+package logic;
 
 public class stimulationClock{
   private SimTime startTime;
