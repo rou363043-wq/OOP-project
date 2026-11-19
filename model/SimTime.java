@@ -1,7 +1,6 @@
 package model;
 
 public class SimTime{
-
   private int total;
   private int date,month ,year;
   private int hour;
