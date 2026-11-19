@@ -8,4 +8,16 @@ public class TimeAllowance{
   private int reserved;
 
 public TimeAllowance(int allocated){
+  this.allocated = allocated;
+  used=0;
+  reserved=0;
+}
+
+public TimeAllowance(int allocated ,int reserved){
+  this.allocated = allocated;
+  this.used = used;
+  this.reserved = reserved;
+}
+
+public int getAllocated(){ return allocated
   
