@@ -8,3 +8,4 @@ public class SimTime{
 
   public SimTime(int d,int m , int y, int h ,int min){
     
+    
