@@ -1,4 +1,5 @@
 package logic;
+import model.SimTime;
 
 public class Prediction{
   private Job job;
