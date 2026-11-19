@@ -43,10 +43,10 @@ public AccessRequest( String unversityID, String fullname, String email, String 
     return false;
 }
 @override
-  public String toString(){
+  public String toLine(){
     return universityId + ";"+ fullName + ";" + email + ";" + phone + ";" + password + ";" status;
 }
-  public static AccessRequest fromString(String line){
+  public static AccessRequest fromLine(String line){
     String[] p = line.split(";");
     if (p.length() !=6)
       return null;
