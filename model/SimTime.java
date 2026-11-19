@@ -62,6 +62,36 @@ public class SimTime{
           return true;
       return false;
   }
+  public static int daysInMonth(int m,int y){
+    int n;
+    switch(m){
+      case 4: case 6: case:9 case 11;
+          n=30;
+          break;
+      case 2:
+        if(isLeapYear(y)) n= 29;
+        else n =28;
+        break;
+      default;
+          n= 31;
+    }
+    return n;
+  }
+  public static SimTime fromText(String text){
+    if(text.equals("null"))
+        return null;
+    String[] parts = text.split("");
+    String[] d = parts [0].split("/");
+    String[] t = parts[1].split(":");
+    int dd = Integer.parseInt(d[0]);
+    int mm = Integer.parseInt(d[1]);
+    int yy = Integer.parseInt(d[2]);
+    int hh = Integer.parseInt(t[0]);
+    int mi = Integer.parseInt(t[1]);
+    return new SimTime(dd, mm, yy, hh, mi);
+
+  }
+        
   
   
     
