@@ -19,5 +19,12 @@ public TimeAllowance(int allocated ,int reserved){
   this.reserved = reserved;
 }
 
-public int getAllocated(){ return allocated
+public int getAllocated(){ return allocated;}
+public int getUsed(){
+    return used;
+}
+public int getReserved(){return reserved;}
+
+public int getAvailable(){
+  int a = allocated 
   
