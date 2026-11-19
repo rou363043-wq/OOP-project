@@ -91,6 +91,21 @@ public class SimTime{
     return new SimTime(dd, mm, yy, hh, mi);
 
   }
+  public SimTime plusMinutes(int n){
+    SimTime t = new SimTime( total + n);
+    return t;
+  }
+  public int minutesUntil(SimTime other){
+    return other.total - total;
+  }
+  public int getTotal(){ return total;}
+
+  public String toString(){
+    String s = String.format("%02d/%02d/%04d%2d: %02d", day ,month ,year ,hour, minute);
+    return s;
+  }
+}
+
         
   
   
