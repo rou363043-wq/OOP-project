@@ -22,4 +22,21 @@ public Student( String id, String password, String name, String email, String ph
 
   public String toLine() {
     String Line = getUsername() + ";" + getPassword() + ";" + getFullName() + ";" + email + ";" + phone;
-    line = line + ";" + allowance.getA
+    line = line + ";" + allowance.getAllowcated() + ";" + allowance.getUsed() + ";" + allowance.getReversed();
+    return line;
+  }
+
+  public Static Student fromLine(String line) {
+    String[] p = line.split(";");
+    if (p.length() !=8)
+      return null;
+    int allocated = Integer.parseInt(p[5]);
+    int used = Integer.parseInt(p[6]);
+    int reserved = Integer.parseInt(p[7]);
+    if ( allocated < 0 || used < 0 || reversed < 0 || allocated - used - reversed < 0 )
+      return null;
+    Studend s = new Student (p[0], p[1], p[2], p[3], p[4], allowcated);
+    s.allowance = new TimeAllowance( allocated, used, reversed);
+    return s;
+  }
+}
