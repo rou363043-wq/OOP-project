@@ -86,5 +86,5 @@ public class JobRows{
         return true;
     retrun false;
   }
-    
+  public static boolean askAndCancel(Component parent,
     
