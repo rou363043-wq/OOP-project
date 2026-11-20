@@ -95,6 +95,22 @@ public class JobRows{
                       + jobId + " is " + j.getStatus().toLowerCase() + ".");
           return false;
       }
+    String text;
+    if(j.isQueued())
+        text = jobId + " is queued. Nothing will be charged.";
+    else{
+        int ran = scheduler.getCancelCharge(j);
+        int back = j.getEstimatedDuration() - ran;
+        text = jobId + " is running on GPU" + j.getAssignedGpuId() + " and has run " + ran + " min.\n"
+                  + ran + " min will be charged. The other " + back + " min return to the balance.";
+    }
+
+    String reason = JOptionPane.showInputDialog(parent, text +"\Reason (Required):",
+                "Cancel job " + jobId, JOptionPane.QUESTION_MESSAGE);
+    if(reason == null)
+          return false;
+    if(scheduler.cancel(jobId, who, reason) == false){
+      
     
     
     
