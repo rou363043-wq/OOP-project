@@ -145,7 +145,113 @@ public class Scheduler{
     }
   }
 
+  public void advanceMinute(){
+    iif(!clock.isSet()){
+      message="Set the clock first.";
+      return;
+    }
+    clock.advance();
+    SimTime now= clock.getNow();
+    for(int g=0; g<4; g++){
+      Job job= gpus[g].getCurrentJob();
+      if(job!=null){
+        if(job.getRuntime(now)>= job.getEsimatedDuration()){
+          job.complete(now);
+          settle(job);
+          gpus[g].release();
+        }
+      }
+    }
+    startWaitingJobs();
+  }
 
+  private void settle(Job job){
+    if(job.markSettled()==false)
+      return;
+    Student owner= accounts.findStudent(job.getStudentId());
+    if(owner==null)
+      return;
+    owner.getAllowance().release(job.getEstimatedDuration());
+    int ran= job.getRuntime(clock.getNow());
+    owner.getAllowance().charge(ran);
+  }
+
+  public boolean cancel(String jobId, User who, String reason){
+    Job job= findJob(jobId);
+    if(job== null){
+      message="No job with ID "+  jobId + ".";
+      return false;
+    }
+    if(who.getRole().equals("Student") && !job.getStudentId().equals(who.getUsername()){
+      message="You can cancel only your own jobs.";
+      return false;
+    }
+    if(reason.trim().length()==0){
+      message="A reason is required.";
+      return false;
+    }
+    boolean wasRunning=job.isRunning();
+    int gpuId=job.getAssignedGpuId();
+    reason= reason.trim().replace(";",",").replace("\n", " ");
+    if(!job.cancel(who.getUsername(), clock.getNow(), reason)){
+      message= jobId+ " is already " +job.getStatus().toLowerCase() + ".";
+      return false;
+    }
+    settle(job);
+
+    if(wasRuning){
+      gpu[gpuId-1].release();
+      startWaitiingJobs();
+    }
+    message= jobId+" cancelled.";
+    return true;    
+  }
+
+  public int getCancelCharge(Job job){
+    if (job.isRunning())
+      return job.getRuntime(clock.getNow());
+    return 0;
+  }
+  public ArrayList<Predictiom> predictAll(){
+    ArrayList<Prediction> result= new ArrayList<Prediction>();
+    if(!clock.isSet())
+      return result;
+    SimTime now= clock.getNow();
+    int[] freeAt= new int[4];
+    for(int g=0; g<4; g++){
+      if (gpus[g].isFree())
+        freeAt[g]= now.getTotal();
+      else
+        freeAt[g]=now.getTotal().gpus[g].getRemaining(now);
+    }
+
+    ArrayList<Job> q= getQueue();
+    for(int i=0; i<q.size(); i++){
+      Job job=q.get(i);
+      int best=0;
+      for(int g=1; g<4; g++){
+        if(freeAt[g]< freeAt[best])
+          best=g;
+      }
+      SimTime start= new SimTime(freeAt[best]);
+      SimTime finish= start.plusMinutes(job.getEstimatedDuration());
+      int wait= now.minutesUntil(start);
+      Prediction p= new Prediction(job, i+1, start, finish, wait);
+      result.add(p);
+      freeAt[best].finish.getTotal();
+    }
+    return result;
+  }
+
+  public Prediction getPrediction(Job job){
+    ArrayList<Prediction> all= predictAll();
+    for(int i=0; i<all.size(); i++){
+      if (all.get(i).getJob()==job)
+        return all.get(i);
+    }
+    return null;
+  }
+  
 
 
 
