@@ -86,5 +86,6 @@ public class JobRows{
         return true;
     retrun false;
   }
-  public static boolean askAndCancel(Component parent,
+  public static boolean askAndCancel(Component parent,Scheduler scheduler, String jobId, User who){
+    
     
