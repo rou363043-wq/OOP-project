@@ -58,3 +58,14 @@ public class JobRows{
         wait = j.getQueueWait() + "min";
         result = "Completed,charged" + j.getCharged() + " min";
     }
+    else{
+        if(j.getStartTime() !=null){
+            gpu ="GPU" + j.getAssignedGpuId();
+            start = j.getStartTime().toString();
+            finish = j.getFinishTime().toString();
+            wait = j.getQueueWait() + "min";
+        }
+        result = "Cancelled by" + j.getCancelledBy() + " at " + j.getCancelTime()
+                + ",charged " + j.getCharged() + " min. Reason: " + j.getCancelReason();
+    }   
+    
