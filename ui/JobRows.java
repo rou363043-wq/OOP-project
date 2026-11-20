@@ -22,4 +22,39 @@ public class JobRows{
   public static Object[] makeRow(Job j , Scheduler scheduler, SimTime now){
     String position="";
     String gpu ="";
-    String start 
+    String start ="";
+    String finish ="";
+    String wait ="";
+    String result ="";
+
+    if(j.isQueued()){
+        Prediction p = scheduler.getPrediction(j);
+        if(p != null){
+            position = "" + p.getPosition();
+            start = p.getStartTime()+ "*";
+            finish = p.getFinishTime()+ "*";
+            wait = p.getWaitMinutes() + " min";
+        }
+    }
+    else if (j.isRunning()){
+      gpu ="GPU" + j.getAssignedGpuId();
+      start = j.getStartTime().toString();
+      finish = j.getStartTime().plusMinutes(j.getEstimatedDuration()) + "*";
+      wait = j.getQueueWait()+ "min";
+      result = "Ran" + j.getRuntime(now) + " of " + j.getEstimatedDuration() + "min";
+    }
+     else if( j.isRunning()){
+         gpu ="GPU" + j.getAssignedGpuId();
+         start = j.getStartTime().toString;
+         finish = j.getStartTime().plusMinutes(j.getEstimatedDuration() + " min";
+         wait = j.getQueueWait() + "min";
+         result = "Ran" + j.getRuntime(now) + " of " + j.getEstimatedDuration() + "min";
+     }
+       
+    else if (j.getStatus().equals("Completed")){
+        gpu = "GPU" + j.getAssignedGpuId();
+        start = j.getStartTime().toString();
+        finish = j.getFinishTime().toString();
+        wait = j.getQueueWait() + "min";
+        result = "Completed,charged" + j.getCharged() + " min";
+    }
