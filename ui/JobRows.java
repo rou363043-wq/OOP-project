@@ -110,6 +110,13 @@ public class JobRows{
     if(reason == null)
           return false;
     if(scheduler.cancel(jobId, who, reason) == false){
+        JOptionPane.showMessageDialog(parent, scheduler.getMessage(),"Job not cancelled",JOtionPane.ERROR_MESSAGE);
+        return fslse;
+    }
+    return true;
+  }
+}
+
       
     
     
