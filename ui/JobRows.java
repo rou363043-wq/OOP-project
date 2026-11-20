@@ -91,6 +91,10 @@ public class JobRows{
       if( j == null)
           return false;
       if(!j.isQueued() && !j.isRunning()){
-          JOptionPane.showMessageDialog(parent,"Only queued or running
+          JOptionPane.showMessageDialog(parent,"Only queued or running jobs can be cancelled.\n"
+                      + jobId + " is " + j.getStatus().toLowerCase() + ".");
+          return false;
+      }
+    
     
     
