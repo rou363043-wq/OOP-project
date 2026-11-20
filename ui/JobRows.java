@@ -67,5 +67,24 @@ public class JobRows{
         }
         result = "Cancelled by" + j.getCancelledBy() + " at " + j.getCancelTime()
                 + ",charged " + j.getCharged() + " min. Reason: " + j.getCancelReason();
-    }   
+    } 
+    Object[] row = {j.getJobId(),j.getStudentId(),j.getTitle(), j.getApplicationName(),
+                    j.getSubmissionTime().toString(),Start, finish, wait, result};
+    return row;
+  }
+  public static boolean matches(Job j, String text, String status){
+    if(!status.equals("All statuses") && !j.getStatus().equals(status))
+        return false;
+    text = text.trim().toLowerCase();
+    if(text.length() == 0)
+        return true;
+    if(j.getJobId().toLowerCase().contains(text))
+        return true;
+    if(j.getTitle().toLowerCase().contains(text))
+        return true;
+    if(j.getStudentId().contains(text))
+        return true;
+    retrun false;
+  }
+    
     
