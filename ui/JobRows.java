@@ -87,5 +87,10 @@ public class JobRows{
     retrun false;
   }
   public static boolean askAndCancel(Component parent,Scheduler scheduler, String jobId, User who){
+      Job j = scheduler.findJob(jobId);
+      if( j == null)
+          return false;
+      if(!j.isQueued() && !j.isRunning()){
+          JOptionPane.showMessageDialog(parent,"Only queued or running
     
     
