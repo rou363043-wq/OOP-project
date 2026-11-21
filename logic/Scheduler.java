@@ -66,8 +66,18 @@ public class Scheduler{
     }
     return list;
   }
+  
+  public ArrayList<Job> getJobsOf(String studentId){
+    ArrayList<Job> list= new ArrayList<Job>();
+    for(int i=0; i<jobs.size(); i++){
+      Job j= jobs.get(i);
+      if(j.getStudentId().equals(studentId))
+        list.add(j);
+    }
+    return list;
+  }
 
-  publicc ArrayList<Job> getQueue(){
+  public ArrayList<Job> getQueue(){
     ArrayList<Job> q= new ArrayList<Job>();
     for(int i=0; i<jobs.size(); i++){
       if(jobs.get(i).isQueued())
