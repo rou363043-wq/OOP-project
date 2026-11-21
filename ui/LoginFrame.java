@@ -111,5 +111,27 @@ public class LoginFrame extends JFrame implements ActionListener {
         if (answer != JOptionPane.OK_OPTION)
             return false;
         
+        SimpleDateFormat f1 = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat f2 = new SimpleDateFormat("HH:mm");
+        String d = f1.format((Date) dateSpinner.getValue());
+        String t = f2.format((Date) timeSpinner.getValue());
+
+        String[] a = d.split("/");
+        String[] b = t.split(":");
+        int day = Integer.parseInt(a[0]);
+        int month = Integer.parseInt(a[1]);
+        int year=Integer.parseInt(a[2]);
+        int hour = Integer.parseInt(b[0]);
+        int min = Integer.parseInt(b[1]);
+
+        if (year < 2000 || year > 2100) {
+            JOptionPane.showMessageDialog(this, "Choose a year between 2000 and 2100.");
+            return false;
+        }
+        clock.setStart(new SimTime(day, month, year, hour, min));
+        return true;
+    }
+}
+        
                 
     
