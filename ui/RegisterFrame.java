@@ -75,4 +75,30 @@ public class RegisterFrame extends JFrame implements ActionListener {
         setSize(520, 380);
         setLocationRelativeTo(null);
     }
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == submitButton) {
+            String pw = new String(passField.getPassword());
+            boolean ok = accounts.register(idField.getText(), nameField.getText(), emailField.getText(),
+                    phoneField.getText(), pw);
+            if (ok == false) {
+                messageLabel.setText(accounts.getMessage());
+                  return;
+            }
+            if (!store.save())
+                JOptionPane.showMessageDialog(this, store.getMessage(), "File error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Request sent. Status: Pending.\nYou can sign in after the 
+                                          administrator approves it.");
+            goBack();
+        }
+        else if (e.getSource() == backButton) {
+            goBack();
+        }
+    }
+    private void goBack() {
+        LoginFrame login = new LoginFrame(accounts, scheduler, clock, store);
+        login.setVisible(true);
+        dispose();
+    }
+}
+
 
