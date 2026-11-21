@@ -14,13 +14,22 @@ import model.SimTime;
 import model.Student;
 import model.User;
 
-public class LoginFrame extends JFrame{
+public class LoginFrame extends JFrame implements ActionListener {
 
-  private JTextField userField = new JTxtField(15);
-  private JPasswordField passField = new JPasswordField(15);
-  private JButton signInButton = new JButton("Sign in");
-  private JButton registerButton = new Jbutton("New student? Request an account");
-  private JLabel messageLabel = new JLabel(" ");
+    private AccountService accounts;
+    private Scheduler scheduler;
+    private SimulationClock clock;
+    private DataStore store;
 
-  public LoginFrame(){
+    private JTextField userField = new JTextField(15);
+    private JPasswordField passField = new JPasswordField(15);
+    private JButton signInButton = new JButton("Sign in");
+    private JButton registerButton = new JButton("New student? Request an account");
+    private JLabel messageLabel = new JLabel(" ");
+
+    public LoginFrame(AccountService accounts, Scheduler scheduler, SimulationClock clock, DataStore store) {
+        this.accounts = accounts;
+        this.scheduler=scheduler;
+        this.clock = clock;
+        this.store=store;
     
