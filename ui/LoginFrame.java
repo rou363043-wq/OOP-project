@@ -60,5 +60,56 @@ public class LoginFrame extends JFrame implements ActionListener {
         setSize(440, 400);
         setLocationRelativeTo(null);
     }
-    
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == signInButton) {
+            String u = userField.getText();
+            String pw = new String(passField.getPassword());
+
+            User user = accounts.login(u, pw);
+            if (user == null) {
+                messageLabel.setText(accounts.getMessage());
+                return;
+            }
+            if (user.getRole().equals("Administrator")) {
+                if (!clock.isSet()) {
+                    boolean ok = askClock();
+                    if (ok == false)
+                        return;
+                    if (!store.save())
+                        JOptionPane.showMessageDialog(this, store.getMessage(), "File error", JOptionPane.ERROR_MESSAGE);
+                }
+                AdminFrame f = new AdminFrame(accounts, scheduler, clock, store, user);
+                f.setVisible(true);
+                dispose();
+            }
+            else {
+                StudentFrame f = new StudentFrame(accounts, scheduler, clock, store, (Student) user);
+                f.setVisible(true);
+                dispose();
+            }
+        }
+        else if (e.getSource() == registerButton) {
+            RegisterFrame f = new RegisterFrame(accounts, scheduler, clock, store);
+            f.setVisible(true);
+            dispose();
+        }
+    }
+    private boolean askClock() {
+        JSpinner dateSpinner = new JSpinner(new SpinnerDateModel());
+        dateSpinner.setEditor(new JSpinner.DateEditor(dateSpinner, "dd/MM/yyyy"));
+        JSpinner timeSpinner = new JSpinner(new SpinnerDateModel());
+        timeSpinner.setEditor(new JSpinner.DateEditor(timeSpinner, "HH:mm"));
+
+        JPanel p = new JPanel(new GridLayout(2, 2, 5, 5));
+        p.add(new JLabel("Date"));
+        p.add(dateSpinner);
+        p.add(new JLabel("Time (24 hour)"));
+        p.add(timeSpinner);
+
+        int answer = JOptionPane.showConfirmDialog(this, p, "Set the starting date and time",
+                JOptionPane.OK_CANCEL_OPTION);
+        if (answer != JOptionPane.OK_OPTION)
+            return false;
+        
+                
     
