@@ -1,4 +1,7 @@
 package logic;
+
+import java.util.ArrayList;
+
 import model.AccessRequest;
 import model.Administrator;
 import model.SimTime;
