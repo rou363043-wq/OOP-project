@@ -251,10 +251,41 @@ public class Scheduler{
     }
     return null;
   }
-  
 
+  public int countByStatus(String status){
+    int count=0;
+    for(int i=0; i<job.size(); i++){
+      if(jobs.get(i).getStatus().equals(status))
+        count++;
+    }
+    return count;
+  }
 
+  public int countBusyGpus(){
+    int busy=0;
+    for(int g=0; g<4; g++){
+      if(!gpus[g].isFree())
+        busy++
+    }
+    return busy;
+  }
 
+  public int getTotalBusyMinutes(){
+    if(!clock.isSet())
+      return 0;
+    int total=0;
+    for(int i=0; i<jobs.size(); i++){
+      total= total + jobs.get(i).getRuntime(clock.getNow());
+    }
+    return total;
+  }
 
+  public String getUtilizationText(){
+    int elapsed= clock.getElapsedMinutes();
+    if(elapsed==0)
+      return "N/A";
+    double u= getTotalBusyMinutes() * 100.0/(4*elapsed);
+    return String.format("%.1.f%%", u);
+  }
   
 }
