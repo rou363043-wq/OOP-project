@@ -32,4 +32,33 @@ public class LoginFrame extends JFrame implements ActionListener {
         this.scheduler=scheduler;
         this.clock = clock;
         this.store=store;
+
+        setTitle("GPU Utilization Management");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        JLabel title = new JLabel("GPU Utilization Management", JLabel.CENTER);
+        title.setFont(new Font("SansSerif", Font.BOLD, 18));
+        JLabel sub = new JLabel("4 x NVIDIA H100 (simulated)", JLabel.CENTER);
+
+        JPanel p = new JPanel(new GridLayout(9, 1, 5, 5));
+        p.setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40));
+        p.add(title);
+        p.add(sub);
+        p.add(new JLabel("Username (university ID)"));
+        p.add(userField);
+        p.add(new JLabel("Password"));
+        p.add(passField);
+        p.add(signInButton);
+        p.add(registerButton);
+        messageLabel.setForeground(Color.RED);
+        p.add(messageLabel);
+        add(p);
+
+        signInButton.addActionListener(this);
+        registerButton.addActionListener(this);
+
+        setSize(440, 400);
+        setLocationRelativeTo(null);
+    }
+    
     
