@@ -1,5 +1,9 @@
 package logic;
 
+import java.util.ArrayList;
+
+import model.GPU;
+import model.Job;
 import model.SimTime;
 import model.Student;
 import model.TaskSize;
