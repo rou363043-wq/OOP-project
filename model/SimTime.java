@@ -2,7 +2,7 @@ package model;
 
 public class SimTime{
   private int total;
-  private int date,month ,year;
+  private int day,month ,year;
   private int hour;
   private int minute;
 
@@ -11,17 +11,18 @@ public class SimTime{
     month = m;
     year = y;
     minute= min;
+    hour = h;
 
     int days =0;
     for(int i = 2000;i<y;i++){
       if(isLeapYear(i))
-          days = days + 336;
+          days = days + 366;
       else
          days = days + 365;
     }
     for(int i=1; i<m;i++){
       days = days +daysInMonth(i,y);
-
+    }
     days = days + d-1;
     total = days*24*60 +h*60 + min;
     }
@@ -41,7 +42,7 @@ public class SimTime{
           len = 366;
       if(days>= len){
           days = days - len;
-          years++;
+          year++;
       }
       else 
           done = true;
@@ -65,14 +66,14 @@ public class SimTime{
   public static int daysInMonth(int m,int y){
     int n;
     switch(m){
-      case 4: case 6: case:9 case 11;
+      case 4: case 6: case 9: case 11:
           n=30;
           break;
       case 2:
         if(isLeapYear(y)) n= 29;
         else n =28;
         break;
-      default;
+      default:
           n= 31;
     }
     return n;
@@ -80,7 +81,7 @@ public class SimTime{
   public static SimTime fromText(String text){
     if(text.equals("null"))
         return null;
-    String[] parts = text.split("");
+    String[] parts = text.split(" ");
     String[] d = parts [0].split("/");
     String[] t = parts[1].split(":");
     int dd = Integer.parseInt(d[0]);
@@ -101,7 +102,7 @@ public class SimTime{
   public int getTotal(){ return total;}
 
   public String toString(){
-    String s = String.format("%02d/%02d/%04d%2d: %02d", day ,month ,year ,hour, minute);
+    String s = String.format("%02d/%02d/ %04d %02d: %02d", day ,month ,year ,hour, minute);
     return s;
   }
 }
