@@ -86,8 +86,7 @@ public class RegisterFrame extends JFrame implements ActionListener {
             }
             if (!store.save())
                 JOptionPane.showMessageDialog(this, store.getMessage(), "File error", JOptionPane.ERROR_MESSAGE);
-            JOptionPane.showMessageDialog(this, "Request sent. Status: Pending.\nYou can sign in after the 
-                                          administrator approves it.");
+            JOptionPane.showMessageDialog(this, "Request sent. Status: Pending.\nYou can sign in after the administrator approves it.");
             goBack();
         }
         else if (e.getSource() == backButton) {
