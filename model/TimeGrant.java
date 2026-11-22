@@ -1,4 +1,4 @@
-package model
+package model;
   public class TimeGrant implements Storable {
     private String studentId;
     private int minutes;
@@ -19,10 +19,10 @@ package model
     }
 
     public static TimeGrant fromLine(String line) {
-      Strin[] p = line.split(";");
+      String[] p = line.split(";");
       if( p.length() !=5)
         return null;
-      TimeGrant g = new TimeGrant(p[0], Integer.parseInt(p[1], p[2], p[3],SimTime.fromText(p[4]));
+      TimeGrant g = new TimeGrant(p[0], Integer.parseInt(p[1]), p[2], p[3],SimTime.fromText(p[4]));
              return g;
     }
   }
