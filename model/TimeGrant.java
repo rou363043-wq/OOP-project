@@ -22,7 +22,7 @@ package model
       Strin[] p = line.split(";");
       if( p.length() !=5)
         return null;
-      TimeGrant g = new TimeGrant(p[0], Integer.parseInt(p[1], p[2], p[3],p[4]));
+      TimeGrant g = new TimeGrant(p[0], Integer.parseInt(p[1], p[2], p[3],SimTime.fromText(p[4]));
              return g;
     }
   }
