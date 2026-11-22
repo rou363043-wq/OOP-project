@@ -1,17 +1,21 @@
 package model;
-private String universityID;
+
+public class AccessRequest implements Storable {
+private String universityId;
 private String fullName;
 private String email;
 private String phone;
-private string password;
+private String password;
 private String status;
 
-public AccessRequest( String unversityID, String fullname, String email, String phone, String password) {
-  this.unversityID=unversityID;
+public AccessRequest( String unversityId, String fullName, String email, String phone, String password) {
+  this.universityId=unversityId;
+  this.fullName = fullName;
   this.email=email;
-  this.phone;
-  this.password;
+  this.phone = phone;
+  this.password = password;
   status="Pending";
+}
 
   public String getUniversityId(){
     return universityId;}
@@ -29,7 +33,7 @@ public AccessRequest( String unversityID, String fullname, String email, String 
   public boolean isPending(){
     return status.equals("Pending");}
   
-  public boolean aprove(){
+  public boolean approve(){
     if (!isPending())
         return false;
     status= "Approved";
@@ -42,17 +46,17 @@ public AccessRequest( String unversityID, String fullname, String email, String 
     }
     return false;
 }
-@override
+@Override
   public String toLine(){
-    return universityId + ";"+ fullName + ";" + email + ";" + phone + ";" + password + ";" status;
+    return universityId + ";"+ fullName + ";" + email + ";" + phone + ";" + password + ";" + status;
 }
   public static AccessRequest fromLine(String line){
     String[] p = line.split(";");
-    if (p.length() !=6)
+    if (p.length !=6)
       return null;
-   if (!p[5].equals("Pending") && !p[5].equals("Approved") && !p[5].equals("rejected))
+   if (!p[5].equals("Pending") && !p[5].equals("Approved") && !p[5].equals("Rejected"))
      return null;
-  AccessRequest r = new AcessRequest( p[0], p[1], p[2], p[3], p[4]);
+  AccessRequest r = new AccessRequest( p[0], p[1], p[2], p[3], p[4]);
    r.status = p[5];
     return r;
 }
