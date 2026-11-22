@@ -288,6 +288,32 @@ public class AdminFrame extends JFrame implements ActionListener {
             minutesField.setText("" + TimeAllowance.DEFAULT_MINUTES);
             refresh();
         }
+            else if(src==findButton){
+                String id= idField.getText().trim();
+                if(accounts.findStudents(id)==null){
+                    shownId="";
+                    JOptionPane.showMessageDialog(this,"No student with this university ID.");
+                }
+                else
+                    shownId=id;
+                refresh();
+            }
+                else if(src==grantButton){
+                    if(shownId.length()==0){
+                        JOptionPane.showMessageDialog(this, "Search for a student first.");
+                        return;
+                    }
+                    boolean ok= accounts.grantTime(shownId, toNumber(grantField.getText()), reasonField.getText(), admin, clock.getNow());
+                    if(!ok){
+                        JOptionPane.showMessageDialog(this, accounts.getMessage(), "Not done", JOptionPane.WARNING_MESSAGE);
+                        return;
+                    }
+                    saveNow();
+                    grantField.setText("");
+                    reasonField.setText("");
+                    refresh();
+                }
+                
         else if (src == cancelStudentJobButton || src == cancelJobButton) {
             JTable table = allTable;
             if (src == cancelStudentJobButton)
