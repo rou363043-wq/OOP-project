@@ -223,27 +223,7 @@ public class AdminFrame extends JFrame implements ActionListener {
         p.add(new JLabel("  * predicted time"), BorderLayout.SOUTH);
         return p;
     }
-     private JPanel makeAllJobsTab() {
-        statusBox.addItem("All statuses");
-        statusBox.addItem("Queued");
-        statusBox.addItem("Running");
-        statusBox.addItem("Completed");
-        statusBox.addItem("Cancelled");
 
-        JPanel bar = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        bar.add(new JLabel("Search by job ID, student ID or title"));
-        bar.add(searchField);
-        bar.add(statusBox);
-        bar.add(searchButton);
-        bar.add(cancelJobButton);
-
-        JobRows.setWidths(allTable);
-        JPanel p = new JPanel(new BorderLayout(8, 8));
-        p.add(bar, BorderLayout.NORTH);
-        p.add(new JScrollPane(allTable), BorderLayout.CENTER);
-        p.add(new JLabel("  * predicted time"), BorderLayout.SOUTH);
-        return p;
-    }
     private void addTile(JPanel panel, JLabel label, String name) {
         label.setFont(new Font("SansSerif", Font.BOLD, 20));
         label.setBorder(BorderFactory.createTitledBorder(name));
@@ -294,7 +274,7 @@ public class AdminFrame extends JFrame implements ActionListener {
                 return;
             }
             AccessRequest r = accounts.getRequests().get(row);
-            oolean ok;
+            boolean ok;
             if (src == approveButton)
                 ok = accounts.approve(r, toNumber(minutesField.getText()), admin);
             else
