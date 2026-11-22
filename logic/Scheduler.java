@@ -19,9 +19,9 @@ public class Scheduler{
 
   public Scheduler(SimulationClock clock, AccountService accounts){
     this.clock= clock;
-    this.account=accounts;
+    this.accounts=accounts;
     for(int i=0; i<4; i++){
-      gpu[i]= new GPU(i+1);
+      gpus[i]= new GPU(i+1);
     }
   }
 
@@ -43,7 +43,7 @@ public class Scheduler{
 
   public boolean restore(ArrayList<Job> saved, int SavedNext){
     jobs= saved;
-    nextJobNumber= savedNext();
+    nextJobNumber= SavedNext();
     for(int g=0; g<4; g++){
       gpus[g].release();
     }
@@ -59,7 +59,7 @@ public class Scheduler{
         nextJobNumber= j.getJobNumber()+1;
       }
     }
-    return true
+    return true;
   }
 
   public Job findJob(String jobId){
@@ -92,7 +92,7 @@ public class Scheduler{
       for(int j=i+1; j<q.size(); j++){
         Job a=q.get(i);
         Job b=q.get(j);
-        int ta=a.getSubmssionTime().getTotal();
+        int ta=a.getSubmissionTime().getTotal();
         int tb=b.getSubmissionTime().getTotal();
         boolean swap=false;
         if(tb<ta)
@@ -160,7 +160,7 @@ public class Scheduler{
   }
 
   public void advanceMinute(){
-    iif(!clock.isSet()){
+    if(!clock.isSet()){
       message="Set the clock first.";
       return;
     }
@@ -169,7 +169,7 @@ public class Scheduler{
     for(int g=0; g<4; g++){
       Job job= gpus[g].getCurrentJob();
       if(job!=null){
-        if(job.getRuntime(now)>= job.getEsimatedDuration()){
+        if(job.getRuntime(now)>= job.getEstimatedDuration()){
           job.complete(now);
           settle(job);
           gpus[g].release();
@@ -213,9 +213,9 @@ public class Scheduler{
     }
     settle(job);
 
-    if(wasRuning){
-      gpu[gpuId-1].release();
-      startWaitiingJobs();
+    if(wasRunning){
+      gpus[gpuId-1].release();
+      startWaitingJobs();
     }
     message= jobId+" cancelled.";
     return true;    
@@ -226,7 +226,7 @@ public class Scheduler{
       return job.getRuntime(clock.getNow());
     return 0;
   }
-  public ArrayList<Predictiom> predictAll(){
+  public ArrayList<Prediction> predictAll(){
     ArrayList<Prediction> result= new ArrayList<Prediction>();
     if(!clock.isSet())
       return result;
@@ -236,7 +236,7 @@ public class Scheduler{
       if (gpus[g].isFree())
         freeAt[g]= now.getTotal();
       else
-        freeAt[g]=now.getTotal().gpus[g].getRemaining(now);
+        freeAt[g]=now.getTotal()+gpus[g].getRemaining(now);
     }
 
     ArrayList<Job> q= getQueue();
@@ -252,7 +252,7 @@ public class Scheduler{
       int wait= now.minutesUntil(start);
       Prediction p= new Prediction(job, i+1, start, finish, wait);
       result.add(p);
-      freeAt[best].finish.getTotal();
+      freeAt[best]=finish.getTotal();
     }
     return result;
   }
@@ -268,7 +268,7 @@ public class Scheduler{
 
   public int countByStatus(String status){
     int count=0;
-    for(int i=0; i<job.size(); i++){
+    for(int i=0; i<jobs.size(); i++){
       if(jobs.get(i).getStatus().equals(status))
         count++;
     }
@@ -279,7 +279,7 @@ public class Scheduler{
     int busy=0;
     for(int g=0; g<4; g++){
       if(!gpus[g].isFree())
-        busy++
+        busy++;
     }
     return busy;
   }
@@ -299,7 +299,7 @@ public class Scheduler{
     if(elapsed==0)
       return "N/A";
     double u= getTotalBusyMinutes() * 100.0/(4*elapsed);
-    return String.format("%.1.f%%", u);
+    return String.format("%.1f%%", u);
   }
   
 }
