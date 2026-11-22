@@ -13,22 +13,22 @@ public class AccountService{
   private Administrator admin = new Administrator();
   private ArrayList<Student> students = new ArrayList<Student>();
   private ArrayList<AccessRequest> requests = new ArrayList<AccessRequest>();
-  private ArrayList<TimeGrant> grants - new ArrayList<TimeGrant>();
+  private ArrayList<TimeGrant> grants = new ArrayList<TimeGrant>();
   private String message = "";
 
   public String getMessage(){ 
     return message;}
   public ArrayList<Student> getStudents(){
     return students;}
-  public ArrayList<AccessRequest> getRequest(){
+  public ArrayList<AccessRequest> getRequests(){
     return requests;}
   public ArrayList<TimeGrant> getGrants(){
     return grants;}
 
   public Student findStudent(String id){
     for (int i=0; i<students.size(); i++){
-        student s = students.get(i);
-        if(s.getuniversityId().equals(id))
+        Student s = students.get(i);
+        if(s.getUniversityId().equals(id))
           return s;
     }
     return null;
@@ -36,7 +36,7 @@ public class AccountService{
 
   public AccessRequest findLatestRequest(String id){
     AccessRequest found = null;
-    for(int i=0; requests.size();i++){
+    for(int i=0; i<requests.size();i++){
       if(requests.get(i).getUniversityId().equals(id))
         found= requests.get(i);
     }
@@ -64,6 +64,7 @@ public class AccountService{
   
     if (name.contains(";") || email.contains(";") || password.contains(";")){
       message = "The character ; is not allowed.";
+      return false;
     }
     
     if (!allDigits(id)){
@@ -87,7 +88,7 @@ public class AccountService{
       return false;
     }
   
-    if (!allDigits(phone) || phone.length()<7 || phone,length()>15){
+    if (!allDigits(phone) || phone.length()<7 || phone.length()>15){
       message = "Enter a valid phone number (7 to 15 digits)";
       return false;
     }
@@ -109,12 +110,12 @@ public class AccountService{
   
   
   public boolean approve(AccessRequest r, int minutes, User by){
-    if (!by.getRole().equals("Administrator"){
+    if (!by.getRole().equals("Administrator")){
       message= "Only the administrator can approve requests.";
       return false;
     }
     if (minutes<=0){
-      message= "Minutes must be a positive whole number.":
+      message= "Minutes must be a positive whole number.";
         return false;      
     }
     if (findStudent(r.getUniversityId())!=null){
@@ -172,7 +173,7 @@ public class AccountService{
     AccessRequest r = findLatestRequest(username);
     if(r==null)
       message= "No account with this username.";
-    else if(r.isPending)
+    else if(r.isPending())
       message= "Your registration is still pending approval.";
     else
       message= "Your registration request was rejected.";
@@ -186,7 +187,7 @@ public class AccountService{
     }
     Student s = findStudent(id);
     if(s ==null){
-      message= "No student with this univeristy ID.";
+      message= "No student with this university ID.";
       return false;
     }
     if(minutes<=0){
