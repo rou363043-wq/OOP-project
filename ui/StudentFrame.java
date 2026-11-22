@@ -42,3 +42,25 @@ public class StudentFrame extends JFrame implements ActionListener {
     private JButton cancelButton = new JButton("Cancel selected job");
     private ReadOnlyTableModel jobModel = new ReadOnlyTableModel(JobRows.columns);
     private JTable jobTable = new JTable(jobModel);
+
+    public StudentFrame(AccountService accounts, Scheduler scheduler, SimulationClock clock, DataStore store, Student me) {
+        this.accounts = accounts;
+        this.scheduler = scheduler;
+        this.clock=clock;
+        this.store = store;
+        this.me = me;
+
+        setTitle("GPU Utilization Management (Student)");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new BorderLayout(8, 8));
+
+        JLabel welcome = new JLabel("  Welcome, " + me.getFullName() + "   (Student " + me.getUniversityId() + ")");
+        welcome.setFont(new Font("SansSerif", Font.BOLD, 16));
+        JPanel right = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        timeLabel.setFont(new Font("SansSerif", Font.BOLD, 14));
+        right.add(timeLabel);
+        right.add(logoutButton);
+        JPanel header = new JPanel(new BorderLayout());
+        header.add(welcome, BorderLayout.WEST);
+        header.add(right, BorderLayout.EAST);
+        add(header, BorderLayout.NORTH);
