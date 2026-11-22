@@ -41,28 +41,29 @@ public class JobRows{
       start = j.getStartTime().toString();
       finish = j.getStartTime().plusMinutes(j.getEstimatedDuration()) + " *";
       wait = j.getQueueWait()+ " min";
-      result = "Ran" + j.getRuntime(now) + " of " + j.getEstimatedDuration() + " min";
+      result = "Ran " + j.getRuntime(now) + " of " + j.getEstimatedDuration() + " min";
     }
        
     else if (j.getStatus().equals("Completed")){
         gpu = "GPU" + j.getAssignedGpuId();
         start = j.getStartTime().toString();
         finish = j.getFinishTime().toString();
-        wait = j.getQueueWait() + "min";
-        result = "Completed,charged" + j.getCharged() + " min";
+        wait = j.getQueueWait() + " min";
+        result = "Completed, charged" + j.getCharged() + " min";
     }
     else{
         if(j.getStartTime() !=null){
             gpu ="GPU" + j.getAssignedGpuId();
             start = j.getStartTime().toString();
             finish = j.getFinishTime().toString();
-            wait = j.getQueueWait() + "min";
+            wait = j.getQueueWait() + " min";
         }
-        result = "Cancelled by" + j.getCancelledBy() + " at " + j.getCancelTime()
-                + ",charged " + j.getCharged() + " min. Reason: " + j.getCancelReason();
+        result = "Cancelled by " + j.getCancelledBy() + " at " + j.getCancelTime()
+                + ", charged " + j.getCharged() + " min. Reason: " + j.getCancelReason();
     } 
-    Object[] row = {j.getJobId(),j.getStudentId(),j.getTitle(), j.getApplicationName(),
-                    j.getSubmissionTime().toString(),Start, finish, wait, result};
+    Object[] row = {j.getJobId(),j.getStudentId(),j.getTitle(), j.getApplicationName(),j.getTaskSize()+" ("+ 
+                    j.getEstimatedDuration()+")", j.getStatus(), position, gpu,
+                    j.getSubmissionTime().toString(),start, finish, wait, result};
     return row;
   }
   public static boolean matches(Job j, String text, String status){
@@ -77,7 +78,7 @@ public class JobRows{
         return true;
     if(j.getStudentId().contains(text))
         return true;
-    retrun false;
+    return false;
   }
   public static boolean askAndCancel(Component parent,Scheduler scheduler, String jobId, User who){
       Job j = scheduler.findJob(jobId);
@@ -98,13 +99,13 @@ public class JobRows{
                   + ran + " min will be charged. The other " + back + " min return to the balance.";
     }
 
-    String reason = JOptionPane.showInputDialog(parent, text +"\Reason (Required):",
+    String reason = JOptionPane.showInputDialog(parent, text +"\nReason (Required):",
                 "Cancel job " + jobId, JOptionPane.QUESTION_MESSAGE);
     if(reason == null)
           return false;
     if(scheduler.cancel(jobId, who, reason) == false){
         JOptionPane.showMessageDialog(parent, scheduler.getMessage(),"Job not cancelled",JOtionPane.ERROR_MESSAGE);
-        return fslse;
+        return false;
     }
     return true;
   }
