@@ -7,7 +7,7 @@ public class TaskSize{
   public static final String LARGE = "Large";
   public static final String VERY_LARGE = "Very large";
 
-  public static int getDuration(String size){
+  public static int unitsFor(String size){
     int units=0;
     if(size==null)
         return 0;
