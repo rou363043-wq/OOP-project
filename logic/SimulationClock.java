@@ -1,7 +1,7 @@
 package logic;
 import model.SimTime;
 
-public class stimulationClock{
+public class SimulationClock{
   private SimTime startTime;
   private SimTime now;
   
@@ -38,6 +38,6 @@ public class stimulationClock{
   public int getElapsedMinutes(){
     if(now==null)
       return 0;
-    return startTime.minutesUtil(now);
+    return startTime.minutesUntil(now);
   }  
 }
