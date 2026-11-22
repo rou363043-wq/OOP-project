@@ -25,5 +25,12 @@ public class GPU {
     currentJob == null;
   }
 
-  
+  public int getRemaining(SimTime now) {
+    if (currentJob == null){
+      return 0;
+    }
+    return currentJob.getRemaining(now);
+  }
+}
+    
   
