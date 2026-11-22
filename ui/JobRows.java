@@ -49,7 +49,7 @@ public class JobRows{
         start = j.getStartTime().toString();
         finish = j.getFinishTime().toString();
         wait = j.getQueueWait() + " min";
-        result = "Completed, charged" + j.getCharged() + " min";
+        result = "Completed, charged " + j.getCharged() + " min";
     }
     else{
         if(j.getStartTime() !=null){
@@ -104,7 +104,7 @@ public class JobRows{
     if(reason == null)
           return false;
     if(scheduler.cancel(jobId, who, reason) == false){
-        JOptionPane.showMessageDialog(parent, scheduler.getMessage(),"Job not cancelled",JOtionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(parent, scheduler.getMessage(),"Job not cancelled",JOptionPane.ERROR_MESSAGE);
         return false;
     }
     return true;
