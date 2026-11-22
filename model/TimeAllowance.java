@@ -29,11 +29,17 @@ public int getAvailable(){
   int a = allocated - used - reserved;
   return a;
 }
-public boolean reserve(int minutes){
-  reserved = reserved - minutes;
-  if( reserved < 0)
-      reserved = 0;
-}
+public boolean reserve(int minutes) {
+        if (minutes > getAvailable())
+            return false;
+        reserved = reserved + minutes;
+        return true;
+    }
+  public void release(int minutes) {
+        reserved = reserved - minutes;
+        if (reserved < 0)
+            reserved = 0;
+  }
 public void charge(int minutes){
   if(minutes < 0)
       return;
@@ -42,8 +48,8 @@ public void charge(int minutes){
       used = allocated - reserved;
 }
 
-public void addAllcated(int minutes){
+public void addAllocated(int minutes){
   allocated = allocated + minutes;
 }
-  
+}
   
