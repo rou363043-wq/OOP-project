@@ -139,3 +139,88 @@ public class StudentFrame extends JFrame implements ActionListener {
         setLocationRelativeTo(null);
         refresh();
     }
+     private void addTile(JPanel panel, JLabel label, String name) {
+        label.setFont(new Font("SansSerif", Font.BOLD, 20));
+        label.setBorder(BorderFactory.createTitledBorder(name));
+        panel.add(label);
+    }
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == logoutButton) {
+            LoginFrame login = new LoginFrame(accounts, scheduler, clock, store);
+            login.setVisible(true);
+            dispose();
+        }
+        else if (e.getSource() == sizeBox) {
+            refresh();
+        }
+        else if (e.getSource() == submitButton) {
+            submitJob();
+        }
+        else if (e.getSource() == searchButton || e.getSource() == statusBox) {
+            refresh();
+        }
+        else if (e.getSource() == cancelButton) {
+            int row = jobTable.getSelectedRow();
+            if (row < 0) {
+                JOptionPane.showMessageDialog(this, "Select a job in the table first.");
+                return;
+            }
+            String jobId = (String) jobModel.getValueAt(row, 0);
+            if (JobRows.askAndCancel(this, scheduler, jobId, me)) {
+                saveNow();
+                refresh();
+            }
+        }
+    }
+     private void submitJob() {
+        String size = (String) sizeBox.getSelectedItem();
+        int duration = TaskSize.unitsFor(size);
+         
+         int answer = JOptionPane.showConfirmDialog(this,
+                "Submit \"" + titleField.getText().trim() + "\" as a " + size + " job?\n"
+                + "Duration: " + duration + " min\n"
+                + "Available now: " + me.getAllowance().getAvailable() + " min",
+                "Confirm job", JOptionPane.OK_CANCEL_OPTION);
+        if (answer != JOptionPane.OK_OPTION)
+            return;
+
+        Job job = scheduler.submit(me, titleField.getText(), appField.getText(), descArea.getText(), size);
+        if (job == null) {
+            JOptionPane.showMessageDialog(this, scheduler.getMessage(), "Job not accepted", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+         saveNow();
+        titleField.setText("");
+        appField.setText("");
+        descArea.setText("");
+        refresh();
+        JOptionPane.showMessageDialog(this, "Job " + job.getJobId() + " accepted. Status: " + job.getStatus() + ".");
+    }
+
+    private void saveNow() {
+        if (store.save() == false)
+            JOptionPane.showMessageDialog(this, store.getMessage(), "File error", JOptionPane.ERROR_MESSAGE);
+    }
+    public void refresh() {
+        if (clock.isSet())
+            timeLabel.setText("Simulated time: " + clock.getNow() + "  ");
+        else
+            timeLabel.setText("The clock is not set yet  ");
+
+        allocatedLabel.setText("" + me.getAllowance().getAllocated());
+        usedLabel.setText("" + me.getAllowance().getUsed());
+        reservedLabel.setText("" + me.getAllowance().getReserved());
+        availableLabel.setText("" + me.getAllowance().getAvailable());
+
+        String size = (String) sizeBox.getSelectedItem();
+        durationLabel.setText("Duration: " + TaskSize.unitsFor(size) + " minutes     ");
+
+        jobModel.setRowCount(0);
+        ArrayList<Job> mine = scheduler.getJobsOf(me.getUniversityId());
+        for (int i = 0; i < mine.size(); i++) {
+            Job j = mine.get(i);
+            if (JobRows.matches(j, searchField.getText(), (String) statusBox.getSelectedItem()))
+                jobModel.addRow(JobRows.makeRow(j, scheduler, clock.getNow()));
+        }
+    }
+}
