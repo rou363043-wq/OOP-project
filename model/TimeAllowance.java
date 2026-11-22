@@ -13,7 +13,7 @@ public TimeAllowance(int allocated){
   reserved=0;
 }
 
-public TimeAllowance(int allocated ,int reserved){
+public TimeAllowance(int allocated , int used ,int reserved){
   this.allocated = allocated;
   this.used = used;
   this.reserved = reserved;
