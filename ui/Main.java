@@ -13,3 +13,15 @@ public class Main {
         SimulationClock clock = new SimulationClock();
         Scheduler scheduler = new Scheduler(clock, accounts);
         DataStore store = new DataStore(accounts, scheduler, clock);
+
+        if (store.load() == false) {
+            JOptionPane.showMessageDialog(null, store.getMessage()
+                    + "\nThe file was not loaded. Fix or remove it, then restart.",
+                    "File error", JOptionPane.ERROR_MESSAGE);
+            System.exit(0);
+        }
+
+        LoginFrame login = new LoginFrame(accounts, scheduler, clock, store);
+        login.setVisible(true);
+    }
+}
