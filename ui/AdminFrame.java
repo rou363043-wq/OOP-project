@@ -290,7 +290,7 @@ public class AdminFrame extends JFrame implements ActionListener {
         }
             else if(src==findButton){
                 String id= idField.getText().trim();
-                if(accounts.findStudents(id)==null){
+                if(accounts.findStudent(id)==null){
                     shownId="";
                     JOptionPane.showMessageDialog(this,"No student with this university ID.");
                 }
