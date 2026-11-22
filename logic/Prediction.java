@@ -1,6 +1,6 @@
 package logic;
 import model.SimTime;
-
+import model.Job;
 public class Prediction{
   private Job job;
   private int position;
