@@ -5,6 +5,7 @@ public class Prediction{
   private Job job;
   private int position;
   private SimTime startTime;
+  private SimTime finishTime;
   private int waitMinutes;
 
   public Prediction(Job job, int position, SimTime startTime, SimTime finishTime, int waitMinutes){
