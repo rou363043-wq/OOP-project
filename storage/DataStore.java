@@ -62,11 +62,8 @@ public class DataStore{
       for (int i = 0; i<studentIds.size(); i++){
         TimeAllowance a = allowances.get(i);
         String line = studentIds.get(i) + ","+a.getAllocated()+","a.getUsed()+","+a.getReserved();
-        writer.write(line + System.lineSeparator());
+        writer.write(line + System.lineSeparator());}
       }
-    }catch (IOException e) {
+      catch (IOException e) {
         throw new Exception("Could not save " + studentsFile.getPath() +".");
-      }
-    }
-        }
-}
+      }//save and load requestes &jobs
