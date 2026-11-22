@@ -43,7 +43,7 @@ public class Scheduler{
 
   public boolean restore(ArrayList<Job> saved, int SavedNext){
     jobs= saved;
-    nextJobNumber= SavedNext();
+    nextJobNumber= SavedNext;
     for(int g=0; g<4; g++){
       gpus[g].release();
     }
@@ -65,10 +65,10 @@ public class Scheduler{
   public Job findJob(String jobId){
     for(int i=0; i<jobs.size(); i++){
       Job j= jobs.get(i);
-      if(j.getStudentId().equals(studentId))
-        list.add(j);
+      if(j.getJobId().equals(jobId))
+        return j;
     }
-    return list;
+    return null;
   }
   
   public ArrayList<Job> getJobsOf(String studentId){
@@ -110,7 +110,7 @@ public class Scheduler{
 
   public Job submit(User who, String title, String app, String desc, String size){
     if(!who.getRole().equals("Student")){
-      message="Only approved students can submut jobs.";
+      message="Only approved students can submit jobs.";
       return null;
     }
     if(!clock.isSet()){
@@ -118,7 +118,7 @@ public class Scheduler{
       return null;
     }
     if(title.trim().length()==0 || app.trim().length()==0 || desc.trim().length()==0){
-      message="Enter the titke, the application name and the description.";
+      message="Enter the title, the application name and the description.";
       return null;
     }
     int duration= TaskSize.unitsFor(size);
