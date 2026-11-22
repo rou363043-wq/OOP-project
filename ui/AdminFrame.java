@@ -273,8 +273,161 @@ public class AdminFrame extends JFrame implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         Object src = e.getSource();
+
+        if (src == plusButton) {
+            scheduler.advanceMinute();
+            saveNow();
+            refresh();
+        }
+        else if (src == logoutButton) {
+            LoginFrame login = new LoginFrame(accounts, scheduler, clock, store);
+            login.setVisible(true);
+            dispose();
+        }
+        else if (src == searchButton || src == statusBox) {
+            refresh();
+        }
+        else if (src == approveButton || src == rejectButton) {
+            int row = requestTable.getSelectedRow();
+            if (row < 0) {
+                JOptionPane.showMessageDialog(this, "Select a request in the table first.");
+                return;
+            }
+            AccessRequest r = accounts.getRequests().get(row);
+            oolean ok;
+            if (src == approveButton)
+                ok = accounts.approve(r, toNumber(minutesField.getText()), admin);
+            else
+                ok = accounts.reject(r, admin);
+
+            if (ok == false) {
+                JOptionPane.showMessageDialog(this, accounts.getMessage(), "Not done", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            saveNow();
+            minutesField.setText("" + TimeAllowance.DEFAULT_MINUTES);
+            refresh();
+        }
+        else if (src == cancelStudentJobButton || src == cancelJobButton) {
+            JTable table = allTable;
+            if (src == cancelStudentJobButton)
+                table = studentJobTable;
+
+            int row = table.getSelectedRow();
+            if (row < 0) {
+                JOptionPane.showMessageDialog(this, "Select a job in the table first.");
+                return;
+            }
+            String jobId = (String) table.getValueAt(row, 0);
+            if (JobRows.askAndCancel(this, scheduler, jobId, admin)) {
+                saveNow();
+                refresh();
+            }
+        }
+    }
+    public void refresh() {
+        SimTime now = clock.getNow();
+        timeLabel.setText("Simulated time: " + now + "  ");
+
+        runningLabel.setText("" + scheduler.countByStatus("Running"));
+        queuedLabel.setText("" + scheduler.countByStatus("Queued"));
+        completedLabel.setText("" + scheduler.countByStatus("Completed"));
+        cancelledLabel.setText("" + scheduler.countByStatus("Cancelled"));
+        busyLabel.setText(scheduler.countBusyGpus() + " / 4");
+        utilLabel.setText(scheduler.getUtilizationText());
         
-    
+        gpuModel.setRowCount(0);
+        GPU[] gpus = scheduler.getGpus();
+        for (int i = 0; i < gpus.length; i++) {
+            if (gpus[i].isFree()) {
+                Object[] row = {gpus[i].getName(), "Free", "", "", ""};
+                gpuModel.addRow(row);
+            }
+            else {
+                int left = gpus[i].getRemaining(now);
+                Object[] row = {gpus[i].getName(), "Busy", gpus[i].getCurrentJob().getJobId(),
+                        left + " min", now.plusMinutes(left).toString()};
+                gpuModel.addRow(row);
+            }
+        }
+        jobModel.setRowCount(0);
+        ArrayList<Job> jobs = scheduler.getJobs();
+        for (int i=0; i<jobs.size(); i++) {
+            Job j = jobs.get(i);
+            if (j.isRunning()) {
+                SimTime fin = j.getStartTime().plusMinutes(j.getEstimatedDuration());
+                Object[] row = {j.getJobId(), j.getStudentId(), j.getApplicationName(), j.getStatus(),
+                        "", j.getStartTime().toString(), fin.toString(), ""};
+                jobModel.addRow(row);
+            }
+        }
+        ArrayList<Prediction> waiting = scheduler.predictAll();
+        for (int i = 0; i < waiting.size(); i++) {
+            Prediction p = waiting.get(i);
+            Job j = p.getJob();
+            Object[] row = {j.getJobId(), j.getStudentId(), j.getApplicationName(), j.getStatus(),
+                    "" + p.getPosition(), p.getStartTime().toString(), p.getFinishTime().toString(),
+                    p.getWaitMinutes() + " min"};
+            jobModel.addRow(row);
+        }
+
+        doneModel.setRowCount(0);
+        for (int i = 0; i < jobs.size(); i++) {
+            Job j = jobs.get(i);
+            if (j.getStatus().equals("Completed")) {
+                Object[] row = {j.getJobId(), j.getStudentId(), "GPU" + j.getAssignedGpuId(),
+                        j.getSubmissionTime().toString(), j.getStartTime().toString(), j.getFinishTime().toString(),
+                        j.getRuntime(now) + " min", j.getQueueWait() + " min", j.getCharged() + " min"};
+                doneModel.addRow(row);
+            }
+        }
+        balanceModel.setRowCount(0);
+        ArrayList<Student> students = accounts.getStudents();
+        for (int i = 0; i < students.size(); i++) {
+            Student s = students.get(i);
+            Object[] row = {s.getUniversityId(), s.getFullName(), s.getAllowance().getAllocated(),
+                    s.getAllowance().getUsed(), s.getAllowance().getReserved(), s.getAllowance().getAvailable()};
+            balanceModel.addRow(row);
+        }
+        requestModel.setRowCount(0);
+        int pending = 0;
+        ArrayList<AccessRequest> requests = accounts.getRequests();
+        for (int i = 0; i < requests.size(); i++) {
+            AccessRequest r = requests.get(i);
+            if (r.isPending())
+                pending++;
+            Object[] row = {r.getUniversityId(), r.getFullName(), r.getEmail(), r.getPhone(),
+                    r.getPassword(), r.getStatus()};
+            requestModel.addRow(row);
+        }
+        tabs.setTitleAt(1, "Requests (" + pending + ")");
+        studentJobModel.setRowCount(0);
+        Student st = accounts.findStudent(shownId);
+        if (st == null) {
+            studentLabel.setText("Type a university ID and press Search.");
+            sAllocated.setText("");
+            sUsed.setText("");
+            sReserved.setText("");
+            sAvailable.setText("");
+        }
+        else {
+            studentLabel.setText(st.getFullName() + "   " + st.getEmail() + "   " + st.getPhone());
+            sAllocated.setText("" + st.getAllowance().getAllocated());
+            sUsed.setText("" + st.getAllowance().getUsed());
+            sReserved.setText("" + st.getAllowance().getReserved());
+            sAvailable.setText("" + st.getAllowance().getAvailable());
+            ArrayList<Job> list = scheduler.getJobsOf(shownId);
+            for (int i = 0; i < list.size(); i++)
+                studentJobModel.addRow(JobRows.makeRow(list.get(i), scheduler, now));
+        }
+         allModel.setRowCount(0);
+        for (int i = 0; i < jobs.size(); i++) {
+            Job j = jobs.get(i);
+            if (JobRows.matches(j, searchField.getText(), (String) statusBox.getSelectedItem()))
+                allModel.addRow(JobRows.makeRow(j, scheduler, now));
+        }
+    }
+}
 
 
   
