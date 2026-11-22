@@ -18,11 +18,11 @@ public class GPU {
   }
 
   public void assign(Job job) {
-    currentJob == job;
+    currentJob = job;
   }
 
   public void release() {
-    currentJob == null;
+    currentJob = null;
   }
 
   public int getRemaining(SimTime now) {
