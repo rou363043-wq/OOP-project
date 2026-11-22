@@ -102,7 +102,7 @@ public class SimTime{
   public int getTotal(){ return total;}
 
   public String toString(){
-    String s = String.format("%02d/%02d/ %04d %02d: %02d", day ,month ,year ,hour, minute);
+    String s = String.format("%02d/%02d/%04d %02d:%02d", day ,month ,year ,hour, minute);
     return s;
   }
 }
